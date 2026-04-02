@@ -1,0 +1,69 @@
+﻿@model CategoriesVM
+
+<h2>All Categories</h2>
+
+<div id="tableExample3" data-list='{"valueNames":["Id","Name","Action"],"page":@Model.TotalPages,"pagination":true}'>
+    <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create</a>
+
+    <div class="row justify-content-end g-0">
+        <div class="col-auto col-sm-5 mb-3">
+            <form>
+                <div class="input-group">
+                    <input class="form-control form-control-sm shadow-none search" type="search" name="query" value="@ViewBag.Query"  placeholder="Search..." aria-label="search" />
+                    <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive scrollbar">
+        <table class="table table-bordered table-striped fs--1 mb-0">
+            <thead class="bg-200 text-900">
+                <tr>
+                    <th class="sort" data-sort="Id">Id</th>
+                    <th class="sort" data-sort="Name">Name</th>
+                    <th  data-sort="Action">Action</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @foreach (var item in Model.Categories)
+        {
+                <tr>
+                        <td class="Id">@item.Id</td>
+                        <td class="Name">@item.Name</td>
+                        <td class="Action">
+                            <a href="/admin/Category/Edit/@item.Id" type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a href="/admin/Category/Delete/@item.Id" type="button" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i> Delete</a>
+                        </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <li class="page-item"><a class="page-link" href="/Admin/Category/Index?page=@(Model.CurrentPage - 1)">Previous</a></li>
+                    }
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        @if (i == Model.CurrentPage)
+                        {
+                            <li class="page-item active"><a class="page-link" href="/Admin/Category/Index?page=@i">@i</a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item"><a class="page-link" href="/Admin/Category/Index?page=@i">@i</a></li>
+                        }
+                    }
+                    @if (Model.CurrentPage != Model.TotalPages)
+                    {
+                        <li class="page-item"><a class="page-link" href="/Admin/Category/Index?page=@(Model.CurrentPage + 1)">Next</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>

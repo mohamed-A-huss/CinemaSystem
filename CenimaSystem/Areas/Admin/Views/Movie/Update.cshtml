@@ -1,0 +1,72 @@
+﻿@model MovieVM
+
+<h2>Edit Movie</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+    <!-- Name -->
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Des" class="form-control"></textarea>
+    </div>
+
+    <!-- Price -->
+    <div class="mb-3">
+        <label>Price</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <!-- Status -->
+    <div class="mb-3">
+        <label>Status</label>
+        <input asp-for="Status" type="checkbox" />
+    </div>
+
+    <!-- Date -->
+    <div class="mb-3">
+        <label>Date</label>
+        <input asp-for="DateTime" type="datetime-local" class="form-control" />
+    </div>
+
+    <!-- Categories -->
+    <div class="mb-3">
+        <label>Categories</label>
+        <select asp-for="CategoryIds" asp-items="Model.Categories" multiple class="form-control"></select>
+    </div>
+
+    <!-- Cinemas -->
+    <div class="mb-3">
+        <label>Cinemas</label>
+        <select asp-for="CinemaIds" asp-items="Model.Cinemas" multiple class="form-control"></select>
+    </div>
+
+    <!-- Actors -->
+    <div class="mb-3">
+        <label>Actors</label>
+        <select asp-for="ActorIds" asp-items="Model.Actors" multiple class="form-control"></select>
+    </div>
+
+    <!-- Main Image -->
+    <div class="mb-3">
+        <label>Current Main Image </label><br />
+        <img src="~/images/movies/@ViewBag.CurrentImg" width="150" />
+    </div>
+    <div class="mb-3">
+        <label>Change Main Image</label>
+        <input asp-for="MainImg" type="file" class="form-control" />
+    </div>
+
+    <!-- Sub Images -->
+    <div class="mb-3">
+        <label>Add More Images</label>
+        <input asp-for="SubImages" type="file" multiple class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+</form>

@@ -1,0 +1,12 @@
+﻿namespace CinemaSystem.Models
+{
+    public class Cinema
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Img { get; set; }
+        // Relationships
+        public List<MovieCinema> MovieCinemas { get; set; } = new();
+
+    }
+}
