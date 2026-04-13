@@ -1,3 +1,4 @@
+
 namespace CinemaSystem
 {
     public class Program
@@ -8,6 +9,12 @@ namespace CinemaSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
             //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IRepository<Actor>, Repository<Actor>>();

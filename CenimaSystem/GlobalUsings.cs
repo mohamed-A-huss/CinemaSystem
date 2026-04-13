@@ -7,4 +7,6 @@ global using CinemaSystem.Validations;
 global using System.Linq.Expressions;
 global using CinemaSystem.Repositories;
 global using CinemaSystem.Repositories.IRepositories;
+global using Microsoft.EntityFrameworkCore;
+
 

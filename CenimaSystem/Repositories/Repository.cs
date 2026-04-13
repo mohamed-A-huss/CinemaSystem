@@ -9,9 +9,9 @@ namespace CinemaSystem.Repositories
         protected readonly ApplicationDbContext _context;// = new();
         protected readonly DbSet<T> _dbSet;// = new();
 
-        public Repository()
+        public Repository(ApplicationDbContext context)
         {
-            _context = new();
+            _context = context;
             _dbSet = _context.Set<T>();
         }
 
