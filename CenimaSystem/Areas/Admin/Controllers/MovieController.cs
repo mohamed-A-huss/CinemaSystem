@@ -15,8 +15,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
         private readonly IMovieSubImgRepository _movieImageRepo;
         private readonly IWebHostEnvironment _env;
 
-        public MovieController(
-            IRepository<Movie> movieRepo,
+        public MovieController(IRepository<Movie> movieRepo,
             IRepository<Category> categoryRepo,
             IRepository<Cinema> cinemaRepo,
             IRepository<Actor> actorRepo,
@@ -96,6 +95,22 @@ namespace CinemaSystem.Areas.Admin.Controllers
                     Actors = (await _actorRepo.GetAsync())
                     .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }).ToList()
                 });
+            if (vm.MainImg == null)
+            {
+                ModelState.AddModelError("MainImg", "Main Image is required");
+
+                // re-fill dropdowns
+                vm.Categories = (await _categoryRepo.GetAsync())
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }).ToList();
+
+                vm.Cinemas = (await _cinemaRepo.GetAsync())
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name }).ToList();
+
+                vm.Actors = (await _actorRepo.GetAsync())
+                    .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name }).ToList();
+
+                return View(vm);
+            }
 
             string mainImgName = Guid.NewGuid() + Path.GetExtension(vm.MainImg.FileName);
             string path = Path.Combine(_env.WebRootPath, "images/movies", mainImgName);

@@ -8,10 +8,10 @@ namespace CinemaSystem.Areas.Admin.Controllers
     {
         private readonly IRepository<Category> _repository;// = new();
 
-        public CategoryController()
+        public CategoryController(IRepository<Category> repository)
         {
             //_context = new();
-            _repository = new Repository<Category>();
+            _repository = repository;
         }
         public async Task<IActionResult> Index(int page = 1, string? query = null, CancellationToken cancellationToken = default)
         {

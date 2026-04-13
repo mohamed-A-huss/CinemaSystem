@@ -10,11 +10,11 @@ namespace CinemaSystem.Areas.Admin.Controllers
     {
         private readonly IRepository<Cinema> _repository;// = new();
 
-        public CinemaController()
+        public CinemaController(IRepository<Cinema> repository)
         {
-            //_context = new();
-            _repository = new Repository<Cinema>();
+            _repository = repository;
         }
+
         public async Task<IActionResult> Index(int page = 1, string? query = null, CancellationToken cancellationToken = default)
         {
             var cinemas = await _repository.GetAsync(cancellationToken: cancellationToken);
