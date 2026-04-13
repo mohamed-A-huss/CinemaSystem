@@ -9,7 +9,7 @@
         <div class="col-auto col-sm-5 mb-3">
             <form>
                 <div class="input-group">
-                    <input class="form-control form-control-sm shadow-none search" type="search" name="query" value="@ViewBag.Query" placeholder="Search..." aria-label="search" />
+                    <input class="form-control form-control-sm shadow-none search" type="search" name="Query" value="@Model.Query" placeholder="Search..." aria-label="search" />
                     <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                 </div>
             </form>
@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody class="list">
-                @foreach (var item in Model.Movies)
+                @foreach (var item in Model.Movies ?? new List<Movie>())
                 {
                     <tr>
                         <td class="Id">@item.Id</td>
@@ -43,27 +43,42 @@
                             <img src="~/images/movies/@item.MainImg" width="100" />
                         </td>
                         <td>
-                            @foreach (var cat in item.MovieCategories)
+                            @if (item.MovieCategories != null)
                             {
-                                <span>@cat.Category.Name</span>
-                
-                                <br />
+                                foreach (var cat in item.MovieCategories)
+                                {
+                                    if (cat.Category != null)
+                                    {
+                                        <span>@cat.Category.Name</span>
+                                        <br />
+                                    }
+                                }
+                            }   
+                        </td>
+                        <td>
+                            @if (item.MovieCinemas != null)
+                            {
+                                foreach (var cinema in item.MovieCinemas)
+                                {
+                                    if (cinema.Cinema != null)
+                                    {
+                                        <span>@cinema.Cinema.Name</span>
+                                        <br />
+                                    }
+                                }
                             }
                         </td>
                         <td>
-                            @foreach (var cinema in item.MovieCinemas)
+                            @if (item.MovieActors != null)
                             {
-                                <span>@cinema.Cinema.Name</span>
-                
-                                <br />
-                            }
-                        </td>
-                        <td>
-                            @foreach (var actor in item.MovieActors)
-                            {
-                                <span>@actor.Actor.Name</span>
-                
-                                <br />
+                                foreach (var actor in item.MovieActors)
+                                {
+                                    if (actor.Actor != null)
+                                    {
+                                        <span>@actor.Actor.Name</span>
+                                        <br />
+                                    }
+                                }
                             }
                         </td>
                         <td class="Action">
@@ -82,24 +97,27 @@
             <ul class="pagination justify-content-center">
                 @if (Model.CurrentPage > 1)
                 {
-                    <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@(Model.CurrentPage - 1)">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@(Model.CurrentPage - 1)&query=@Model.Query">Previous</a></li>
                 }
                 @for (var i = 1; i <= Model.TotalPages; i++)
                 {
                     @if (i == Model.CurrentPage)
                     {
-                        <li class="page-item active"><a class="page-link" href="/Admin/movie/Index?page=@i">@i</a></li>
+                        <li class="page-item active"><a class="page-link" href="/Admin/movie/Index?page=@i&query=@Model.Query">@i</a></li>
                     }
                     else
                     {
-                        <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@i">@i</a></li>
+                        <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@i&query=@Model.Query">@i</a></li>
                     }
                 }
                 @if (Model.CurrentPage != Model.TotalPages)
                 {
-                    <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@(Model.CurrentPage + 1)">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="/Admin/movie/Index?page=@(Model.CurrentPage + 1)&query=@Model.Query">Next</a></li>
                 }
             </ul>
         </nav>
     </div>
 </div>
+@section Scripts {
+    <partial name="_NotificationPartial" />
+}

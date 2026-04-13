@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CinemaSystem.Areas.Admin.Controllers
 {
@@ -7,18 +8,19 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
     public class CinemaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Cinema> _repository;// = new();
+
         public CinemaController()
         {
-            _context = new();
+            //_context = new();
+            _repository = new Repository<Cinema>();
         }
-        public IActionResult Index(int page = 1, string? query = null)
+        public async Task<IActionResult> Index(int page = 1, string? query = null, CancellationToken cancellationToken = default)
         {
-            var cinemas = _context.Cinemas.AsQueryable();
+            var cinemas = await _repository.GetAsync(cancellationToken: cancellationToken);
             if (query is not null)
             {
                 cinemas = cinemas.Where(e => e.Name.ToLower().Contains(query.Trim().ToLower()));
-                ViewBag.Query = query;
 
             }
 
@@ -30,24 +32,30 @@ namespace CinemaSystem.Areas.Admin.Controllers
                 Cinemas = cinemas.AsEnumerable(),
                 TotalPages = totalPages,
                 CurrentPage = page,
+                Query= query
             });
         }
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Cinema());
         }
         [HttpPost]
-        public IActionResult Create(Cinema cinema,IFormFile Img)
+        public async Task<IActionResult> Create(Cinema cinema,IFormFile Img, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(cinema);
+            }
             if (Img is not null && Img.Length > 0)
             {
                 string fileName = CreateFile(Img);
 
                 cinema.Img = fileName;
             }
-            _context.Cinemas.Add(cinema);
-            _context.SaveChanges();
+             await _repository.CreateAsync(cinema, cancellationToken);
+            await _repository.CommitAsync(cancellationToken);
+            TempData["Success"] = "Cinema Added successfully!";
 
 
             return RedirectToAction(nameof(Index));
@@ -55,19 +63,24 @@ namespace CinemaSystem.Areas.Admin.Controllers
         
         [HttpGet]
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id, CancellationToken cancellationToken = default)
         {
-            var brand = _context.Cinemas.Find(id);
-            if (brand is null)
+            var cinema =await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);
+            if (cinema is null)
                 return NotFound();
 
-            return View(brand);
+            return View(cinema);
         }
         [HttpPost]
 
-        public IActionResult Update(Cinema cinema, IFormFile Img)
+        public async Task<IActionResult> Update(Cinema cinema, IFormFile Img, CancellationToken cancellationToken = default)
         {
-            var cinemaFromDb = _context.Cinemas.AsNoTracking().FirstOrDefault(e => e.Id == cinema.Id);
+            if (!ModelState.IsValid)
+            {
+                return View(cinema);
+            }
+            var cinemaFromDb = await _repository.GetOneAsync(e => e.Id == cinema.Id, cancellationToken: cancellationToken,tracked:false);
+
             if (Img is not null && Img.Length > 0)
             {
                 string fileName = CreateFile(Img);
@@ -84,14 +97,17 @@ namespace CinemaSystem.Areas.Admin.Controllers
                 cinema.Img = cinemaFromDb.Img;
             }
 
-            _context.Cinemas.Update(cinema);
-            _context.SaveChanges();
+             _repository.Update(cinema);
+            await _repository.CommitAsync(cancellationToken);
+     
+            TempData["Success"] = "Cinema Updated successfully!";
+
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
 
         {
-            var cinema = _context.Cinemas.Find(id);
+            var cinema =await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);
 
             if (cinema is null)
                 return NotFound();
@@ -101,8 +117,10 @@ namespace CinemaSystem.Areas.Admin.Controllers
             {
                 System.IO.File.Delete(oldFilePath);
             }
-            _context.Cinemas.Remove(cinema);
-            _context.SaveChanges();
+            _repository.Delete(cinema);
+            await _repository.CommitAsync(cancellationToken);
+            TempData["Success"] = "Cinema Deleted successfully!";
+
             return RedirectToAction(nameof(Index));
         }
         private string CreateFile(IFormFile Img)

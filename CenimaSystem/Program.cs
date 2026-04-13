@@ -8,6 +8,8 @@ namespace CinemaSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IMovieSubImgRepository, MovieSubImgRepository>();
 
             var app = builder.Build();
 

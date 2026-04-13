@@ -1,15 +1,23 @@
-﻿namespace CinemaSystem.Models
+﻿
+namespace CinemaSystem.Models
 {
     public class Movie
     {
         public int Id { get; set; }
-        public string Name { get; set; }=null!; 
+        [Required()]
+        [MinLength(3)]
+        [MaxLength(30)]
+        public string Name { get; set; }=null!;
+        [MinLength(5)]
+        [MaxLength(500)]
         public string? Des { get; set; }
-        public decimal Price { get; set; }
+
+        //[CustomRangeAtribute(5.0,1000.0)]
+        public double Price { get; set; }
         public bool Status { get; set; } = true;
         public DateTime DateTime { get; set; }
 
-        public string MainImg { get; set; } = null!;
+        public string MainImg { get; set; }=null!;
         public string? Trailer { get; set; }
 
         // Relationships

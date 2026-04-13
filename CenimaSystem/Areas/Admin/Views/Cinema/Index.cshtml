@@ -11,7 +11,7 @@
         <div class="col-auto col-sm-5 mb-3">
             <form>
                 <div class="input-group">
-                    <input class="form-control form-control-sm shadow-none search" type="search" name="query" value="@ViewBag.Query" placeholder="Search..." aria-label="search" />
+                    <input class="form-control form-control-sm shadow-none search" type="search" name="Query" value="@Model.Query" placeholder="Search..." aria-label="search" />
                     <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                 </div>
             </form>
@@ -109,3 +109,6 @@
         });
     });
 </script> 
+@section Scripts {
+	<partial name="_NotificationPartial"/> 
+}

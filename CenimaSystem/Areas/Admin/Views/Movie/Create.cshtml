@@ -6,13 +6,19 @@
 	<!-- Name -->
 	<div class="mb-3">
 		<label for="Name">Name</label>
-		<input asp-for="Name" placeholder="Name" />
+		<input asp-for="Name" class="form-control form-control-lg" placeholder="Movie" />
+
+		<span asp-validation-for="Name" class="text-danger"></span>
+
 	</div>
 
 	<!-- Price -->
 	<div class="mb-3">
 		<label for="Price">Price</label>
-		<input asp-for="Price" placeholder="Price" />
+		<input asp-for="Price" class="form-control form-control-lg" placeholder="Price"  />
+
+		<span asp-validation-for="Price" class="text-danger"></span>
+
 	</div>
 	<!-- Categories -->
 	<div class="mb-3">
@@ -45,4 +51,9 @@
 	<div class="mb-3">
 	<button type="submit">Save</button>
 </div>
+
 		</form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+
+}

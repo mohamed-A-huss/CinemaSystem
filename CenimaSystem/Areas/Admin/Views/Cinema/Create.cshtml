@@ -1,4 +1,4 @@
-﻿
+﻿@model Cinema
 
 <h2>Create Cinema</h2>
 
@@ -6,7 +6,9 @@
 
     <div class="mb-3">
         <label for="Name" class="form-label">Name</label>
-        <input class="form-control" placeholder="Name" name="Name">
+        <input asp-for="Name" class="form-control form-control-lg" placeholder="Cinema Name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+
     </div>
 
     <div class="mb-3">
@@ -15,3 +17,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

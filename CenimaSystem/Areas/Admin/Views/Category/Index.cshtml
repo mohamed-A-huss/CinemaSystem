@@ -1,5 +1,6 @@
 ﻿@model CategoriesVM
 
+
 <h2>All Categories</h2>
 
 <div id="tableExample3" data-list='{"valueNames":["Id","Name","Action"],"page":@Model.TotalPages,"pagination":true}'>
@@ -31,7 +32,7 @@
                         <td class="Id">@item.Id</td>
                         <td class="Name">@item.Name</td>
                         <td class="Action">
-                            <a href="/admin/Category/Edit/@item.Id" type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a href="/admin/Category/Update/@item.Id" type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
                             <a href="/admin/Category/Delete/@item.Id" type="button" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i> Delete</a>
                         </td>
                 </tr>
@@ -67,3 +68,6 @@
             </nav>
         </div>
     </div>
+@section Scripts {
+	<partial name="_NotificationPartial"/> 
+}

@@ -1,23 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CinemaSystem.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
     public class ActorController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Actor> _repository;// = new();
+
         public ActorController()
         {
-            _context = new();
+            //_context = new();
+            _repository = new Repository<Actor>();
         }
-        public IActionResult Index(int page = 1, string? query = null)
+        public async Task<IActionResult> Index(int page = 1, string? query = null, CancellationToken cancellationToken = default)
         {
-            var actors = _context.Actors.AsQueryable();
+            var actors =await _repository.GetAsync();
             if (query is not null)
             {
                 actors = actors.Where(e => e.Name.ToLower().Contains(query.Trim().ToLower()));
-                ViewBag.Query = query;
+                
 
             }
 
@@ -29,33 +32,39 @@ namespace CinemaSystem.Areas.Admin.Controllers
                 Actors = actors.AsEnumerable(),
                 TotalPages = totalPages,
                 CurrentPage = page,
+                Query= query
             });
         }
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Actor());
         }
         [HttpPost]
-        public IActionResult Create(Actor actor, IFormFile Img)
+        public async Task<IActionResult> Create(Actor actor, IFormFile Img, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(actor);
+            }
             if (Img is not null && Img.Length > 0)
             {
                 string fileName = CreateFile(Img);
 
                 actor.Img = fileName;
             }
-            _context.Actors.Add(actor);
-            _context.SaveChanges();
+            await _repository.CreateAsync(actor, cancellationToken);
+            await _repository.CommitAsync(cancellationToken);
 
+            TempData["Success"] = "Actor Added successfully!";
 
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id, CancellationToken cancellationToken = default)
         {
-            var actor = _context.Actors.Find(id);
+            var actor = await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);
             if (actor is null)
                 return NotFound();
 
@@ -63,9 +72,14 @@ namespace CinemaSystem.Areas.Admin.Controllers
         }
         [HttpPost]
 
-        public IActionResult Update(Actor actor, IFormFile Img)
+        public async Task<IActionResult> Update(Actor actor, IFormFile Img, CancellationToken cancellationToken = default)
         {
-            var actorFromDb = _context.Actors.AsNoTracking().FirstOrDefault(e => e.Id == actor.Id);
+            if (!ModelState.IsValid)
+            {
+                return View(actor);
+            }
+
+            var actorFromDb = await _repository.GetOneAsync(e => e.Id == actor.Id, cancellationToken: cancellationToken ,tracked: false);
             if (Img is not null && Img.Length > 0)
             {
                 string fileName = CreateFile(Img);
@@ -82,14 +96,17 @@ namespace CinemaSystem.Areas.Admin.Controllers
                 actor.Img = actorFromDb.Img;
             }
 
-            _context.Actors.Update(actor);
-            _context.SaveChanges();
+
+             _repository.Update(actor);
+            await _repository.CommitAsync(cancellationToken);
+            TempData["Success"] = "Actor Updated successfully!";
+
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
 
         {
-            var actor = _context.Actors.Find(id);
+            var actor = await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);
 
             if (actor is null)
                 return NotFound();
@@ -99,8 +116,10 @@ namespace CinemaSystem.Areas.Admin.Controllers
             {
                 System.IO.File.Delete(oldFilePath);
             }
-            _context.Actors.Remove(actor);
-            _context.SaveChanges();
+            _repository.Delete(actor);
+            await _repository.CommitAsync(cancellationToken);
+            TempData["Success"] = "Actor Deleted successfully!";
+
             return RedirectToAction(nameof(Index));
         }
 

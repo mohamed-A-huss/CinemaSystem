@@ -6,7 +6,9 @@
 
     <div class="mb-3">
         <label for="Name" class="form-label">Name</label>
-        <input class="form-control" placeholder="Name" name="Name" value="@Model.Name">
+        <input asp-for="Name" class="form-control form-control-lg" placeholder="Cinema" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+
     </div>
     <div class="mb-3">
     <img src="~/images/cinema/@Model.Img" width="100" />
@@ -17,3 +19,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

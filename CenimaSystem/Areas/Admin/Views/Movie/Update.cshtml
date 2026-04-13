@@ -7,7 +7,9 @@
     <!-- Name -->
     <div class="mb-3">
         <label>Name</label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control form-control-lg" placeholder="Movie" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+
     </div>
 
     <!-- Description -->
@@ -20,6 +22,8 @@
     <div class="mb-3">
         <label>Price</label>
         <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+
     </div>
 
     <!-- Status -->
@@ -70,3 +74,6 @@
 
     <button type="submit" class="btn btn-success">Update</button>
 </form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
