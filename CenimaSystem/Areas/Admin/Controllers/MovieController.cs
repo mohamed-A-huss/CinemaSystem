@@ -167,7 +167,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             await _movieRepo.CreateAsync(movie);
             await _movieRepo.CommitAsync();
-            TempData["Success"] = "Movie Added successfully!";
+            TempData["success-notification"] = "Movie Added successfully!";
 
             return RedirectToAction("Index");
         }
@@ -302,7 +302,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
             }
 
             await _movieRepo.CommitAsync();
-            TempData["Success"] = "Movie Updated successfully!";
+            TempData["success-notification"] = "Movie Updated successfully!";
 
             return RedirectToAction("Index");
         }
@@ -338,7 +338,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             _movieRepo.Delete(movie);
             await _movieRepo.CommitAsync();
-            TempData["Success"] = "Movie Deleted successfully!";
+            TempData["success-notification"] = "Movie Deleted successfully!";
 
             return RedirectToAction("Index");
         }

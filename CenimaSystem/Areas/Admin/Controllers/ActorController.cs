@@ -57,7 +57,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
             await _repository.CreateAsync(actor, cancellationToken);
             await _repository.CommitAsync(cancellationToken);
 
-            TempData["Success"] = "Actor Added successfully!";
+            TempData["success-notification"] = "Actor Added successfully!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -100,7 +100,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
              _repository.Update(actor);
             await _repository.CommitAsync(cancellationToken);
-            TempData["Success"] = "Actor Updated successfully!";
+            TempData["success-notification"] = "Actor Updated successfully!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -119,7 +119,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
             }
             _repository.Delete(actor);
             await _repository.CommitAsync(cancellationToken);
-            TempData["Success"] = "Actor Deleted successfully!";
+            TempData["success-notification"] = "Actor Deleted successfully!";
 
             return RedirectToAction(nameof(Index));
         }

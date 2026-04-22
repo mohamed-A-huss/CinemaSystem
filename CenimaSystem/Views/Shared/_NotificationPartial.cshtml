@@ -1,24 +1,24 @@
-﻿@if (TempData["Success"] != null)
+﻿@if (TempData["success-notification"] != null)
 {
     <script>
-        toastr.success('@TempData["Success"]')
+        toastr.success('@TempData["success-notification"]')
     </script>
 }
-else if (TempData["Error"] != null)
+else if (TempData["error-notification"] != null)
 {
     <script>
-        toastr.erorr('@TempData["Erorr"]')
+        toastr.error('@TempData["error-notification"]')
     </script>
 }
-else if (TempData["Warning"] != null)
+else if (TempData["warning-notification"] != null)
 {
     <script>
-        toastr.warning('@TempData["Warning"]')
+        toastr.warning('@TempData["warning-notification"]')
     </script>
 }
-else if (TempData["info"] != null)
+else if (TempData["info-notification"] != null)
 {
     <script>
-        toastr.info('@TempData["info"]')
+        toastr.info('@TempData["info-notification"]')
     </script>
 }

@@ -1,9 +1,11 @@
 ﻿using CinemaSystem.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using CinemaSystem.ViewModels;
 
 namespace CinemaSystem.DataAccess
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -20,6 +22,7 @@ namespace CinemaSystem.DataAccess
         public DbSet<MovieActor> MovieActors { get; set; }
         public DbSet<MovieCategory> MovieCategories { get; set; }
         public DbSet<MovieCinema> MovieCinemas { get; set; }
+        public DbSet<ApplicationUserOTP> ApplicationUserOTPs { get; set; }
 
         
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,5 +43,11 @@ namespace CinemaSystem.DataAccess
             modelBuilder.Entity<MovieCinema>()
                 .HasKey(mc => new { mc.MovieId, mc.CinemaId });
         }
+        public DbSet<CinemaSystem.ViewModels.RegisterVM> RegisterVM { get; set; } = default!;
+        public DbSet<CinemaSystem.ViewModels.LoginVM> LoginVM { get; set; } = default!;
+        public DbSet<CinemaSystem.ViewModels.ResendEmailConfirmationVM> ResendEmialConfirmatiomVM { get; set; } = default!;
+        public DbSet<CinemaSystem.ViewModels.ForgetPasswordVM> ForgetPasswordVM { get; set; } = default!;
+        public DbSet<CinemaSystem.ViewModels.ValidateOTPVM> ValidateOTPVM { get; set; } = default!;
+        public DbSet<CinemaSystem.ViewModels.ChangePasswordVM> ChangePasswordVM { get; set; } = default!;
     }
 }

@@ -47,7 +47,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             await _repository.CreateAsync(category, cancellationToken);
             await _repository.CommitAsync(cancellationToken);
-            TempData["Success"] = "Category created successfully!";
+            TempData["success-notification"] = "Category created successfully!";
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
@@ -66,7 +66,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             _repository.Update(category);
             await _repository.CommitAsync(cancellationToken);
-            TempData["Success"] = "Category Updated successfully!";
+            TempData["success-notification"] = "Category Updated successfully!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -77,7 +77,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             _repository.Delete(category);
             await _repository.CommitAsync(cancellationToken);
-            TempData["Success"] = "Category Deleted successfully!";
+            TempData["success-notification"] = "Category Deleted successfully!";
 
             return RedirectToAction(nameof(Index));
         }
