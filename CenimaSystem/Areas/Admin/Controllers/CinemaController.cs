@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CinemaSystem.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
+    [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE},{SD.EMPLOYEE_ROLE}")]
 
     public class CinemaController : Controller
     {
@@ -36,11 +38,15 @@ namespace CinemaSystem.Areas.Admin.Controllers
             });
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public IActionResult Create()
         {
             return View(new Cinema());
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Create(Cinema cinema,IFormFile Img, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -62,6 +68,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
         }
         
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
 
         public async Task<IActionResult> Update(int id, CancellationToken cancellationToken = default)
         {
@@ -72,6 +79,7 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return View(cinema);
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
 
         public async Task<IActionResult> Update(Cinema cinema, IFormFile Img, CancellationToken cancellationToken = default)
         {
@@ -104,6 +112,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
 
         {

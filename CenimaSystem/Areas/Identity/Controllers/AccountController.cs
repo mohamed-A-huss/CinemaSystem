@@ -67,6 +67,7 @@ namespace CinemaSystem.Areas.Identity.Controllers
 
             TempData["success-notification"] = "Create Account Successfully, Please Check Your email to verfiy";
             //await _signInManger.SignInAsync(user, false);
+            await _userManager.AddToRoleAsync(user, SD.CUSTOMER_AREA);
 
             return RedirectToAction(nameof(Login));
         }
@@ -127,7 +128,7 @@ namespace CinemaSystem.Areas.Identity.Controllers
             }
             TempData["success-notification"] = $"Welcome Back {user.FirstName} {user.LastName}";
 
-            return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
         [HttpGet]
         public IActionResult ResendEmailConfirmation()

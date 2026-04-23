@@ -4,8 +4,12 @@
 
 
 <div id="tableExample3" data-list='{"valueNames":["Id","Name","Image","Action"],"page":@Model.TotalPages,"pagination":true}'>
-    <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create</a>
-
+    @if (User.IsInRole(SD.SUPER_ADMIN_ROLE) || User.IsInRole(SD.ADMIN_ROLE))
+    {
+        <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
+            <a href="/Admin/Actor/Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create</a>
+        </div>
+    }
     <div class="row justify-content-end g-0">
         <div class="col-auto col-sm-5 mb-3">
             <form>
@@ -36,8 +40,15 @@
                             <img src="~/images/actor/@item.Img" width="100" />
                         </td>
                         <td class="Action">
-                            <a href="/admin/actor/Update/@item.Id" type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                            <a href="/admin/actor/Delete/@item.Id" type="button" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i> Delete</a>
+                            @if (User.IsInRole(SD.SUPER_ADMIN_ROLE) || User.IsInRole(SD.ADMIN_ROLE))
+                            {
+                                <a href="/Admin/Actor/Update/@item.Id" type="button" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <a href="/Admin/Actor/Delete/@item.Id" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i> Delete</a>
+                            }
+                            else
+                            {
+                                <span>No Action</span>
+                            }
                         </td>
                     </tr>
                 }

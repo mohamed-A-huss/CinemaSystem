@@ -1,9 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaSystem.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
+    [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE},{SD.EMPLOYEE_ROLE}")]
+
     public class CategoryController : Controller
     {
         private readonly IRepository<Category> _repository;// = new();
@@ -35,11 +38,15 @@ namespace CinemaSystem.Areas.Admin.Controllers
             });
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public IActionResult Create()
         {
             return View(new Category());
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Create(Category category, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -51,6 +58,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Update(int id, CancellationToken cancellationToken = default)
         {
             var category =await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);
@@ -59,6 +68,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return View(category);
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Update(Category category, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -70,6 +81,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
         {
             var category = await _repository.GetOneAsync(e => e.Id == id, cancellationToken: cancellationToken);

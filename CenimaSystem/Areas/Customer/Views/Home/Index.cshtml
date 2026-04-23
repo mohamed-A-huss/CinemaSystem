@@ -1,122 +1,90 @@
-﻿<main class="main-content">
-	<div class="container">
-		<div class="page">
-			<div class="row">
-				<div class="col-md-9">
-					<div class="slider">
-						<ul class="slides">
-							<li><a href="#"><img src="dummy/slide-1.jpg" alt="Slide 1"></a></li>
-							<li><a href="#"><img src="dummy/slide-2.jpg" alt="Slide 2"></a></li>
-							<li><a href="#"><img src="dummy/slide-3.jpg" alt="Slide 3"></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="row">
-						<div class="col-sm-6 col-md-12">
-							<div class="latest-movie">
-								<a href="#"><img src="dummy/thumb-1.jpg" alt="Movie 1"></a>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-12">
-							<div class="latest-movie">
-								<a href="#"><img src="dummy/thumb-2.jpg" alt="Movie 2"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> <!-- .row -->
-			<div class="row">
-				<div class="col-sm-6 col-md-3">
-					<div class="latest-movie">
-						<a href="#"><img src="dummy/thumb-3.jpg" alt="Movie 3"></a>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="latest-movie">
-						<a href="#"><img src="dummy/thumb-4.jpg" alt="Movie 4"></a>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="latest-movie">
-						<a href="#"><img src="dummy/thumb-5.jpg" alt="Movie 5"></a>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="latest-movie">
-						<a href="#"><img src="dummy/thumb-6.jpg" alt="Movie 6"></a>
-					</div>
-				</div>
-			</div> <!-- .row -->
-						
-			<div class="row">
-				<div class="col-md-4">
-					<h2 class="section-title">December premiere</h2>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-					<ul class="movie-schedule">
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-					</ul> <!-- .movie-schedule -->
-				</div>
-				<div class="col-md-4">
-					<h2 class="section-title">November premiere</h2>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-					<ul class="movie-schedule">
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-					</ul> <!-- .movie-schedule -->
-				</div>
-				<div class="col-md-4">
-					<h2 class="section-title">October premiere</h2>
-					<p>Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-					<ul class="movie-schedule">
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-						<li>
-							<div class="date">16/12</div>
-							<h2 class="entry-title"><a href="#">Perspiciatis unde omnis</a></h2>
-						</li>
-					</ul> <!-- .movie-schedule -->
-				</div>
-			</div>
-		</div>
-	</div> <!-- .container -->
-</main>
+﻿@model MoviesFilterVM
+
+<div class="row mb-3">
+    <div class="col-md-4  offset-6">
+
+        <form method="get" asp-action="Index">
+            <div class="input-group search-box">
+
+                <span class="input-group-text border-0 bg-dark text-white">
+                    <i class="fa fa-search"></i>
+                </span>
+
+                <input type="search"
+                       name="Query"
+                       value="@Model?.Query"
+                       class="form-control border-0 bg-dark text-white"
+                       placeholder="Search movies..."
+                       autocomplete="off" />
+
+                <button class="btn btn-warning px-3" type="submit">
+                    Search
+                </button>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+<div class="container my-5">
+
+    <div class="row g-4">
+
+        @foreach (var movie in Model.Movies)
+        { 
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="movie-card position-relative">
+                    <a href="@Url.Action("Details", "Home", new { id = movie.Id })">
+                    <!-- Price -->
+                    <span class="badge bg-dark position-absolute top-0 end-0 m-2 rounded-circle p-2">
+							@movie.Price.ToString("C")
+                    </span>
+
+
+                    <!-- Image -->
+                    <img src="~/images/movies/@movie.MainImg"
+                         class="img-fluid rounded"
+                         style="height:300px; object-fit:cover; width:100%;" />
+
+                    <!-- Title -->
+                    <h6 class="text-center text-white mt-2 fw-bold">
+                        @movie.Name
+                    </h6>
+                    </a>
+                </div>
+                </div>
+            
+        }
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link" href="/Customer/home/Index?page=@(Model.CurrentPage - 1)&query=@Model.Query">Previous</a></li>
+                }
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    @if (i == Model.CurrentPage)
+                    {
+                        <li class="page-item active"><a class="page-link" href="/Customer/home/Index?page=@i&query=@Model.Query">@i</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="/Customer/home/Index?page=@i&query=@Model.Query">@i</a></li>
+                    }
+                }
+                @if (Model.CurrentPage != Model.TotalPages)
+                {
+                    <li class="page-item"><a class="page-link" href="/Customer/home/Index?page=@(Model.CurrentPage + 1)&query=@Model.Query">Next</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_NotificationPartial" />
+}

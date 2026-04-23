@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CinemaSystem.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
+    [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE},{SD.EMPLOYEE_ROLE}")]
+
     public class ActorController : Controller
     {
         private readonly IRepository<Actor> _repository;// = new();
@@ -37,11 +40,15 @@ namespace CinemaSystem.Areas.Admin.Controllers
             });
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public IActionResult Create()
         {
             return View(new Actor());
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Create(Actor actor, IFormFile Img, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -62,6 +69,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
 
         public async Task<IActionResult> Update(int id, CancellationToken cancellationToken = default)
         {
@@ -72,6 +81,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return View(actor);
         }
         [HttpPost]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
 
         public async Task<IActionResult> Update(Actor actor, IFormFile Img, CancellationToken cancellationToken = default)
         {
@@ -104,6 +115,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
 
         {

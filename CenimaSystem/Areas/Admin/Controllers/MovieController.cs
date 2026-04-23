@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -6,6 +7,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace CinemaSystem.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
+    [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE},{SD.EMPLOYEE_ROLE}")]
+
     public class MovieController : Controller
     {
         private readonly IRepository<Movie> _movieRepo;
@@ -30,15 +33,15 @@ namespace CinemaSystem.Areas.Admin.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index(int page = 1, string? query = null)
+        public async Task<IActionResult> Index(int page = 1, string? query = null, CancellationToken cancellationToken = default)
         {
             var movies = await _movieRepo.GetAsync(
-                                includes: new Expression<Func<Movie, object>>[]
-                                {
+                                includes:
+                                [
                                     m => m.MovieCategories,
                                     m => m.MovieCinemas,
                                     m => m.MovieActors
-                                }
+                                ]
                             );
             var queryable = movies.AsQueryable();
 
@@ -63,6 +66,8 @@ namespace CinemaSystem.Areas.Admin.Controllers
             });
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Create()
         {
             
@@ -81,7 +86,9 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(MovieVM vm)
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
+        public async Task<IActionResult> Create(MovieVM vm, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
                 return View(new MovieVM
@@ -172,17 +179,19 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
         public async Task<IActionResult> Update(int id)
         {
             var movie = await _movieRepo.GetOneAsync(
                                 m => m.Id == id,
-                                includes: new Expression<Func<Movie, object>>[]
-                                {
+                                includes:
+                                [
                                     m => m.MovieCategories,
                                     m => m.MovieCinemas,
                                     m => m.MovieActors,
                                     m => m.SubImages
-                                }
+                                ]
                             );
 
             if (movie == null) return NotFound();
@@ -213,7 +222,9 @@ namespace CinemaSystem.Areas.Admin.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id, MovieVM vm)
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
+        public async Task<IActionResult> Update(int id, MovieVM vm, CancellationToken cancellationToken = default)
 
         {
             if (!ModelState.IsValid)
@@ -230,13 +241,13 @@ namespace CinemaSystem.Areas.Admin.Controllers
                 });
             var movie = await _movieRepo.GetOneAsync(
                                 m => m.Id == id,
-                                includes: new Expression<Func<Movie, object>>[]
-                                {
+                                includes:
+                                [
                                     m => m.MovieCategories,
                                     m => m.MovieCinemas,
                                     m => m.MovieActors,
                                     m => m.SubImages
-                                }
+                                ]
                             );
 
             if (movie == null) return NotFound();
@@ -306,17 +317,19 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> Delete(int id)
+        [Authorize(Roles = $"{SD.SUPER_ADMIN_ROLE},{SD.ADMIN_ROLE}")]
+
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
         {
             var movie = await _movieRepo.GetOneAsync(
                                 m => m.Id == id,
-                                includes: new Expression<Func<Movie, object>>[]
-                                {
+                                includes:
+                                [
                                     m => m.MovieCategories,
                                     m => m.MovieCinemas,
                                     m => m.MovieActors,
                                     m => m.SubImages
-                                }
+                                ]
                             );
 
             if (movie == null) return NotFound();

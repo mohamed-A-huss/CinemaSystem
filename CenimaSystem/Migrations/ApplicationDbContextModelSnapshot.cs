@@ -298,6 +298,27 @@ namespace CinemaSystem.Migrations
                     b.ToTable("MovieImages");
                 });
 
+            modelBuilder.Entity("CinemaSystem.ViewModels.ChangePasswordVM", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChangePasswordVM");
+                });
+
             modelBuilder.Entity("CinemaSystem.ViewModels.ForgetPasswordVM", b =>
                 {
                     b.Property<int>("Id")
