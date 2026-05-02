@@ -1,0 +1,28 @@
+﻿@model CinemaSystem.Models.Show
+@{
+    var seats = ViewBag.Seats as List<CinemaSystem.Models.Seat>;
+}
+
+<h2>@Model.Movie.Name</h2>
+<h4>@Model.Cinema.Name</h4>
+<p>@Model.StartTime</p>
+
+<form asp-action="ConfirmBooking" method="post">
+
+    <input type="hidden" name="showId" value="@Model.Id" />
+
+    <div class="seat-grid">
+        @foreach (var seat in seats)
+        {
+            <label class="seat">
+                <input type="checkbox" name="seatIds" value="@seat.Id" />
+                @seat.Row@seat.Number
+            </label>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">
+        Book Now
+    </button>
+
+</form>

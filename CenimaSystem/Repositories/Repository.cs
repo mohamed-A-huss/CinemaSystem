@@ -1,5 +1,6 @@
 ﻿using CinemaSystem.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace CinemaSystem.Repositories
@@ -46,6 +47,7 @@ namespace CinemaSystem.Repositories
 
         public async Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>>? expression = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
             Expression<Func<T, object>>?[]? includes = null,
             bool tracked = true,
             CancellationToken cancellationToken = default) // Get All
@@ -55,10 +57,13 @@ namespace CinemaSystem.Repositories
             if (expression is not null)
                 entities = entities.Where(expression);
 
+            
             if (includes is not null)
                 foreach (var item in includes)
                     if (item is not null)
                         entities = entities.Include(item);
+            if (include is not null)
+                entities = include(entities);
 
             if (!tracked)
                 entities = entities.AsNoTracking();
@@ -68,11 +73,12 @@ namespace CinemaSystem.Repositories
 
         public async Task<T?> GetOneAsync(
             Expression<Func<T, bool>>? expression = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
             Expression<Func<T, object>>?[]? includes = null,
             bool tracked = true,
             CancellationToken cancellationToken = default)
         {
-            return (await GetAsync(expression, includes, tracked, cancellationToken)).FirstOrDefault();
+            return (await GetAsync(expression,include, includes, tracked, cancellationToken)).FirstOrDefault();
         }
     }
 }

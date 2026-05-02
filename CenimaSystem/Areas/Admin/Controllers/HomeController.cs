@@ -9,9 +9,14 @@ namespace CinemaSystem.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public HomeController(ApplicationDbContext context)
+        private readonly IRepository<Seat> _seatRepo;
+        private readonly ISeatAddRangeRepository _seatAddRangeRepo;
+
+        public HomeController(ApplicationDbContext context, IRepository<Seat> seatRepo, ISeatAddRangeRepository seatAddRangeRepo)
         {
             _context = context;
+            _seatRepo = seatRepo;
+            _seatAddRangeRepo = seatAddRangeRepo;
         }
         public IActionResult Index()
         {
@@ -22,5 +27,30 @@ namespace CinemaSystem.Areas.Admin.Controllers
 
             return View();
         }
+        public async Task GenerateSeats(int cinemaId)
+        {
+            var rows = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+            int seatsPerRow = 12;
+
+            var seats = new List<Seat>();
+
+            foreach (var row in rows)
+            {
+                for (int i = 1; i <= seatsPerRow; i++)
+                {
+                    seats.Add(new Seat
+                    {
+                        CinemaId = cinemaId,
+                        Row = row,
+                        Number = i
+                    });
+                }
+            }
+
+            _seatAddRangeRepo.AddRange(seats);
+
+            await _seatRepo.CommitAsync();
+        }
+
     }
 }

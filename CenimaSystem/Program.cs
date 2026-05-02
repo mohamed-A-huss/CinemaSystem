@@ -41,6 +41,11 @@ namespace CinemaSystem
             builder.Services.AddScoped<IRepository<Actor>, Repository<Actor>>();
             builder.Services.AddScoped<IRepository<Movie>, Repository<Movie>>();
             builder.Services.AddScoped<IRepository<Cinema>, Repository<Cinema>>();
+            builder.Services.AddScoped<IRepository<Show>, Repository<Show>>();
+            builder.Services.AddScoped<IRepository<Seat>, Repository<Seat>>();
+            builder.Services.AddScoped<IRepository<BookingSeat>, Repository<BookingSeat>>();
+            builder.Services.AddScoped<IRepository<Booking>, Repository<Booking>>();
+            builder.Services.AddScoped<ISeatAddRangeRepository, SeatAddRangeRepository>();
             builder.Services.AddScoped<IMovieSubImgRepository, MovieSubImgRepository>();
             builder.Services.AddScoped<IRepository<ApplicationUserOTP>, Repository<ApplicationUserOTP>>();
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();

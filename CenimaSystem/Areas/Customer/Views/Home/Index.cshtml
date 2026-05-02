@@ -34,7 +34,7 @@
         { 
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="movie-card position-relative">
-                    <a href="@Url.Action("Details", "Home", new { id = movie.Id })">
+                    <a asp-action="Details" asp-route-id="@movie.Id">
                     <!-- Price -->
                     <span class="badge bg-dark position-absolute top-0 end-0 m-2 rounded-circle p-2">
 							@movie.Price.ToString("C")

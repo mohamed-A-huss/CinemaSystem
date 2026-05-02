@@ -14,12 +14,15 @@ namespace CinemaSystem.Repositories.IRepositories
 
         Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>>? expression = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+
             Expression<Func<T, object>>?[]? includes = null,
             bool tracked = true,
             CancellationToken cancellationToken = default);
 
         Task<T?> GetOneAsync(
             Expression<Func<T, bool>>? expression = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
             Expression<Func<T, object>>?[]? includes = null,
             bool tracked = true,
             CancellationToken cancellationToken = default);

@@ -5,13 +5,13 @@ using CinemaSystem.ViewModels;
 
 namespace CinemaSystem.DataAccess
 {
-    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
-        
+
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -24,7 +24,12 @@ namespace CinemaSystem.DataAccess
         public DbSet<MovieCinema> MovieCinemas { get; set; }
         public DbSet<ApplicationUserOTP> ApplicationUserOTPs { get; set; }
 
-        
+        public DbSet<Show> Shows { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+        public DbSet<BookingSeat> BookingSeats { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    base.OnConfiguring(optionsBuilder);
@@ -42,6 +47,18 @@ namespace CinemaSystem.DataAccess
 
             modelBuilder.Entity<MovieCinema>()
                 .HasKey(mc => new { mc.MovieId, mc.CinemaId });
+
+
+            modelBuilder.Entity<BookingSeat>()
+        .HasOne(bs => bs.Seat)
+        .WithMany()
+        .HasForeignKey(bs => bs.SeatId)
+        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Booking>()
+    .HasOne(b => b.User)
+    .WithMany()
+    .HasForeignKey(b => b.UserId);
+
         }
         public DbSet<CinemaSystem.ViewModels.RegisterVM> RegisterVM { get; set; } = default!;
         public DbSet<CinemaSystem.ViewModels.LoginVM> LoginVM { get; set; } = default!;
