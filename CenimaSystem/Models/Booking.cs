@@ -12,6 +12,10 @@
         public ApplicationUser User { get; set; }
 
         public double TotalPrice { get; set; }
+        public string? SessionId { get; set; }
+        public bool IsPaid { get; set; } = false;
+        public string Status { get; set; } = "Pending";
+        public string? PaymentIntentId { get; set; }
 
         public List<BookingSeat> BookingSeats { get; set; } = new();
     }

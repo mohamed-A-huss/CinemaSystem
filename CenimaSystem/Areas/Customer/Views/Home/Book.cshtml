@@ -1,28 +1,105 @@
 ﻿@model CinemaSystem.Models.Show
 @{
     var seats = ViewBag.Seats as List<CinemaSystem.Models.Seat>;
+    var bookedSeats = ViewBag.BookedSeats as List<int>;
 }
 
-<h2>@Model.Movie.Name</h2>
-<h4>@Model.Cinema.Name</h4>
-<p>@Model.StartTime</p>
+<h2 class="text-center">@Model.Movie.Name</h2>
+<h4 class="text-center">@Model.Cinema.Name</h4>
+
+<div class="text-center mb-3">
+    <span class="badge bg-secondary">Available</span>
+    <span class="badge bg-success">Selected</span>
+    <span class="badge bg-danger">Booked</span>
+</div>
 
 <form asp-action="ConfirmBooking" method="post">
-
     <input type="hidden" name="showId" value="@Model.Id" />
 
-    <div class="seat-grid">
-        @foreach (var seat in seats)
+    <div class="seat-container text-center">
+
+        @foreach (var rowGroup in seats.GroupBy(s => s.Row))
         {
-            <label class="seat">
-                <input type="checkbox" name="seatIds" value="@seat.Id" />
-                @seat.Row@seat.Number
-            </label>
+            <div class="mb-2">
+                <strong>@rowGroup.Key</strong>
+
+                @foreach (var seat in rowGroup)
+                {
+                    var isBooked = bookedSeats.Contains(seat.Id);
+
+                    <label class="seat @(isBooked ? "booked" : "")">
+                        <input type="checkbox"
+                               name="seatIds"
+                               value="@seat.Id"
+                        @(isBooked ? "disabled" : "") />
+
+                        @seat.Number
+                    </label>
+                }
+            </div>
         }
+
     </div>
 
-    <button type="submit" class="btn btn-success mt-3">
-        Book Now
-    </button>
+    <div class="text-center mt-4">
+        <h4>Total Price: <span id="totalPrice">0</span> EGP</h4>
 
+        <button type="submit" class="btn btn-success mt-2">
+            🎟 Confirm Booking
+        </button>
+    </div>
 </form>
+
+
+<style>
+    .seat {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        border-radius: 5px;
+        background-color: #6c757d; /* available */
+        color: white;
+        text-align: center;
+        line-height: 40px;
+        cursor: pointer;
+    }
+
+    .seat input {
+        display: none;
+    }
+
+    .seat input:checked + * {
+        background-color: #28a745;
+    }
+
+    .seat:has(input:checked) {
+        background-color: #28a745 !important;
+    }
+
+    .seat.booked {
+        background-color: #dc3545;
+        cursor: not-allowed;
+    }
+</style>
+
+<script>
+    const pricePerSeat = @Model.Price ?? @Model.Movie.Price;
+
+    const checkboxes = document.querySelectorAll('input[name="seatIds"]');
+    const totalPrice = document.getElementById('totalPrice');
+
+    function updatePrice() {
+        let count = 0;
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) count++;
+        });
+
+        totalPrice.innerText = count * pricePerSeat;
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updatePrice);
+    });
+</script>

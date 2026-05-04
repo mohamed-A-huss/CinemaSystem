@@ -3,6 +3,8 @@ using CinemaSystem.Utility.DbInitializers;
 using Ecommerce.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Stripe;
 
 namespace CinemaSystem
 {
@@ -52,6 +54,10 @@ namespace CinemaSystem
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+
+
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

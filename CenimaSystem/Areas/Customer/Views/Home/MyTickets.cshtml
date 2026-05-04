@@ -1,0 +1,39 @@
+﻿@model List<CinemaSystem.Models.Booking>
+
+<h2 class="mb-4">🎟 My Tickets</h2>
+
+@foreach (var booking in Model)
+{
+    <div class="card mb-3 shadow-sm p-3">
+        <h4>@booking.Show.Movie.Name</h4>
+
+        <p>
+            🏢 @booking.Show.Cinema.Name <br />
+            ⏰ @booking.Show.StartTime <br />
+            💰 @booking.TotalPrice EGP <br />
+            📌 Status: <strong>@booking.Status</strong>
+        </p>
+
+        <p>
+            🪑 Seats:
+            @foreach (var seat in booking.BookingSeats)
+            {
+                <span class="badge bg-secondary">
+                    @seat.Seat.Row@seat.Seat.Number
+                </span>
+            }
+        </p>
+
+        @if (booking.Status == "Paid")
+        {
+            <form asp-action="Refund" method="post">
+                <input type="hidden" name="bookingId" value="@booking.Id" />
+                <button class="btn btn-danger">💸 Refund</button>
+            </form>
+        }
+     
+    </div>
+  
+        
+    
+}

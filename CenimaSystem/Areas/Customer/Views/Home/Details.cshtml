@@ -106,36 +106,38 @@
                 var shows = ViewBag.Shows as List<CinemaSystem.Models.Show>;
             }
 
-            <div class="mt-4">
-                <h5>🎬 Available Shows</h5>
-
-                @if (shows != null && shows.Any())
-                {
-                    @foreach (var show in shows)
-                    {
-                        <div class="border p-2 mb-2 rounded">
-                            <p>
-                                🏢 @show.Cinema.Name <br />
-                                ⏰ @show.StartTime.ToString("g")
-                            </p>
-
-                            <a asp-controller="Home"
-                                   asp-action="Book"
-                                   asp-route-showId="@show.Id"
-                                   class="btn btn-success">
-                                🎟 Book Now
-                            </a>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p>No shows available</p>
-                }
-            </div>
+           
 
         </div>
     </div>
+    
+
+    <h4 class="mt-4">🎬 Choose Cinema & Time</h4>
+    @if (shows != null && shows.Any())
+                {
+    @foreach (var cinemaGroup in shows.GroupBy(s => s.Cinema.Name))
+    {
+        <div class="card mb-3 p-3 shadow-sm">
+            <h5>🏢 @cinemaGroup.Key</h5>
+
+            @foreach (var show in cinemaGroup)
+            {
+                <a asp-area="Customer"
+                       asp-controller="Home"
+                       asp-action="Book"
+                       asp-route-showId="@show.Id"
+                       class="btn btn-outline-primary m-1">
+
+                    ⏰ @show.StartTime.ToString("hh:mm tt")
+                </a>
+            }
+        </div>
+        }
+    }
+    else
+    {
+        <p>No shows available</p>
+    }
 
     <!-- 🖼 Sub Images -->
     @if (Model.SubImages.Any())
