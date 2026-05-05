@@ -179,7 +179,7 @@ namespace CinemaSystem.Areas.Customer.Controllers
 
                 Mode = "payment",
 
-                SuccessUrl = $"{Request.Scheme}://{Request.Host}/Customer/Booking/Success?bookingId={booking.Id}",
+                SuccessUrl = $"{Request.Scheme}://{Request.Host}/Customer/Booking/Success?bookingId={booking.Id}&session_id={{CHECKOUT_SESSION_ID}}",
                 CancelUrl = $"{Request.Scheme}://{Request.Host}/Customer/Booking/Cancel?bookingId={booking.Id}",
             };
 
@@ -187,7 +187,6 @@ namespace CinemaSystem.Areas.Customer.Controllers
             var session = service.Create(options);
 
             booking.SessionId = session.Id;
-            booking.PaymentIntentId = session.PaymentIntentId;
             await _context.SaveChangesAsync();
 
             return Redirect(session.Url);
@@ -217,6 +216,9 @@ namespace CinemaSystem.Areas.Customer.Controllers
 
             if (booking == null || booking.Status != "Paid")
                 return BadRequest();
+
+            if (string.IsNullOrEmpty(booking.PaymentIntentId))
+                return BadRequest("Missing PaymentIntentId");
 
             var refundOptions = new RefundCreateOptions
             {

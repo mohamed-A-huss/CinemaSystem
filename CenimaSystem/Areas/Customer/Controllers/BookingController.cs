@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 
 namespace CinemaSystem.Areas.Customer.Controllers
 {
@@ -14,15 +15,26 @@ namespace CinemaSystem.Areas.Customer.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Success(int bookingId)
+        public async Task<IActionResult> Success(int bookingId, string session_id)
         {
-            var booking = await _context.Bookings
-                .FirstOrDefaultAsync(b => b.Id == bookingId);
+            if (string.IsNullOrEmpty(session_id))
+                return BadRequest("Missing session_id");
 
+            var service = new SessionService();
+            var session = service.Get(session_id, new SessionGetOptions
+            {
+                Expand = new List<string> { "payment_intent" }
+            });
+
+            var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking == null) return NotFound();
 
-            booking.IsPaid = true;
+            if (string.IsNullOrEmpty(session.PaymentIntentId))
+                return BadRequest("Payment not completed");
+
+            booking.PaymentIntentId = session.PaymentIntentId;
             booking.Status = "Paid";
+            booking.IsPaid = true;
 
             await _context.SaveChangesAsync();
 

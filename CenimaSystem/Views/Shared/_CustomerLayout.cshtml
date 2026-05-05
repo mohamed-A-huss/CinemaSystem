@@ -47,13 +47,23 @@
 								<li class="menu-item"><a href="about.html">About</a></li>
 								<li class="menu-item"><a href="review.html">Movie reviews</a></li>
 						<li class="menu-item">
-							<a asp-area="Customer"
-								   asp-controller="Home"
-								   asp-action="MyTickets"
-								   class="nav-link">
-								My Tickets
-							</a>
-						</li>
+							@if (User is not null && User.Identity.IsAuthenticated)
+								{
+									<a asp-area="Customer"
+									asp-controller="Home"
+									asp-action="MyTickets"
+									class="nav-link">
+										My Tickets
+									</a>				
+								}
+								else
+								{
+								<a href="/Identity/Account/Login"
+									   class="nav-link">
+									My Tickets
+								</a>
+								}
+							</li>
 								<li class="menu-item"><a href="contact.html">Contact</a></li>
 								<li class="menu-item">
 									<div class="dropdown">
